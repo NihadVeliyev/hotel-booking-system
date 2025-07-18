@@ -30,6 +30,10 @@ public class Room {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
+    @OneToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
+
 
     }
 

@@ -28,7 +28,7 @@ public   class Booking {
     @Column(nullable = false)
     private String customerEmail;
 
-    @OneToOne
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private Room room;
 
     @Column(nullable = false,updatable = false)
@@ -43,6 +43,7 @@ public   class Booking {
 
     @Enumerated(EnumType.STRING)
     private BookingStatus bookinglStatus;
+
 
 }
 
