@@ -1,9 +1,8 @@
 package az.edu.turing.hotelbookingsystem.dto.Booking;
 
-import az.edu.turing.hotelbookingsystem.entity.Room;
+import az.edu.turing.hotelbookingsystem.dto.Room.RoomResponse;
 import az.edu.turing.hotelbookingsystem.enums.BookingStatus;
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
+
 
 import java.time.LocalDateTime;
 
@@ -15,7 +14,7 @@ public class BookingResponse {
 
     private String customerEmail;
 
-    private Room room;
+    private RoomResponse room;
 
     private LocalDateTime createdAt;
 
