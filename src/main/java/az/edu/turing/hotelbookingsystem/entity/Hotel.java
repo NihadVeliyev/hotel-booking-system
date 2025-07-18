@@ -1,11 +1,20 @@
 package az.edu.turing.hotelbookingsystem.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "hotels")
 public class Hotel {
 
@@ -19,6 +28,10 @@ public class Hotel {
         @Column
         private String location;
 
-        @Column
-        private LocalDateTime createdAt=LocalDateTime.now();
+        @Column(nullable = false, updatable = false)
+        @CreationTimestamp
+        private LocalDateTime createdAt;
+
+        @OneToMany(mappedBy = "hotel",cascade = CascadeType.ALL,orphanRemoval = true)
+        private List<Room> rooms;
     }
