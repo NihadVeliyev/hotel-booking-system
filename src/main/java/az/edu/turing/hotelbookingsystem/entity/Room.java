@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
@@ -24,7 +23,7 @@ public class Room {
     @Column(nullable = false)
     private Integer price;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
     @ManyToOne

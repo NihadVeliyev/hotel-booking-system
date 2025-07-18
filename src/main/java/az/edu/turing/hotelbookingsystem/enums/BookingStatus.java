@@ -1,6 +1,6 @@
 package az.edu.turing.hotelbookingsystem.enums;
 
-public enum BookinglStatus {
+public enum BookingStatus {
     ACTIVE,
     CANCELED
 }
