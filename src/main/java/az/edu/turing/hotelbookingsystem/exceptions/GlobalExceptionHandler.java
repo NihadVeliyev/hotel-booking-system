@@ -28,6 +28,16 @@ public class GlobalExceptionHandler {
         
     }
 
-
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiError> validationError(ValidationException ex,HttpServletRequest request){
+        log.warn("Validation failed {}",ex.getMessage());
+        ApiError apiError=new ApiError(
+                400,
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(400).body(apiError);
+    }
 
 }
