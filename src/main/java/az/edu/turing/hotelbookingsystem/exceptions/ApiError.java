@@ -3,12 +3,15 @@ package az.edu.turing.hotelbookingsystem.exceptions;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 public class ApiError {
     private int status;
     private String message;
     private String path;
     private LocalDateTime timestamp;
+    private List<FieldErrorResponse> errorResponse;
 
     public ApiError(int status, String message, String path, LocalDateTime timestamp) {
         this.status = status;
