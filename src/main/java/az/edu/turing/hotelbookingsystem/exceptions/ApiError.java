@@ -18,6 +18,13 @@ public class ApiError {
         this.message = message;
         this.path = path;
         this.timestamp = timestamp;
+        this.errorResponse=List.of();
     }
-
+    public ApiError(int status, String message, String path, LocalDateTime timestamp,List<FieldErrorResponse> errorResponse) {
+        this.status = status;
+        this.message = message;
+        this.path = path;
+        this.timestamp = timestamp;
+        this.errorResponse=errorResponse;
+    }
 }
