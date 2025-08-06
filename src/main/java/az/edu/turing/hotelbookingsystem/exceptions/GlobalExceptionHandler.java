@@ -51,6 +51,16 @@ public class GlobalExceptionHandler {
                 .map(err->new FieldErrorResponse(err.getField(),err.getDefaultMessage()))
                 .toList();
 
+        ApiError apiError=new ApiError(
+                400,
+                "Validition failed",
+                request.getRequestURI(),
+                LocalDateTime.now(),
+                fieldErrorResponseMap
+
+        );
+        return ResponseEntity.badRequest().body(apiError);
+
 
     }
 
