@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -41,6 +42,19 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(400).body(apiError);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex,HttpServletRequest request){
+        List<FieldErrorResponse> fieldErrorResponseMap=ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(err->new FieldErrorResponse(err.getField(),err.getDefaultMessage()))
+                .toList();
+
+
+    }
+
+
 
 
 
