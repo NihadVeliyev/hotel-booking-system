@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,6 +63,28 @@ public class GlobalExceptionHandler {
 
         );
         log.warn("Validation failed: {}", fieldErrorResponseMap);
+        return ResponseEntity.badRequest().body(apiError);
+
+
+    }
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleTypeMisMatch(MethodArgumentTypeMismatchException ex,HttpServletRequest request){
+        String parameterName= ex.getName() !=null ? ex.getName() : "unknown";
+        String wrongValue=String.valueOf(ex.getValue());
+        String expectedType = ex.getRequiredType() != null
+                ? ex.getRequiredType().getSimpleName()
+                : "unknown";
+        String message=String.format("Invalid value '%s' for parameter '%s', Expected value: %s.",wrongValue,parameterName,expectedType);
+        log.warn("Type mismatch: {}",message);
+
+        ApiError apiError=new ApiError(
+                400,
+                message,
+                request.getRequestURI(),
+                LocalDateTime.now()
+
+        );
+
         return ResponseEntity.badRequest().body(apiError);
 
 
