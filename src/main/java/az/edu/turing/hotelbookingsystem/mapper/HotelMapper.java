@@ -1,4 +1,19 @@
 package az.edu.turing.hotelbookingsystem.mapper;
 
-public class HotelMapper {
+import az.edu.turing.hotelbookingsystem.dto.Hotel.HotelRequest;
+import az.edu.turing.hotelbookingsystem.dto.Hotel.HotelResponse;
+import az.edu.turing.hotelbookingsystem.entity.Hotel;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper(componentModel = "spring")
+public interface HotelMapper {
+
+
+    @Mapping(target = "booking", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    Hotel toEntity(HotelRequest request);
+    HotelResponse toResponse(Hotel hotel);
+
 }
