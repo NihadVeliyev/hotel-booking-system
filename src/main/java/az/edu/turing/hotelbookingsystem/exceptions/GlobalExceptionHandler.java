@@ -2,6 +2,7 @@ package az.edu.turing.hotelbookingsystem.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +31,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body(apiError);
 
         
+    }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiError> handleNoResource(NotFoundException ex,HttpServletRequest request){
+        log.warn("Resource not found : {}",ex.getMessage());
+        ApiError apiError=new ApiError(404, ex.getMessage(), request.getRequestURI(),LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 
     @ExceptionHandler(ValidationException.class)
