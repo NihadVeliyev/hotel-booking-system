@@ -5,9 +5,11 @@ import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
 import az.edu.turing.hotelbookingsystem.dto.Room.RoomResponse;
 import az.edu.turing.hotelbookingsystem.entity.Room;
 import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
+import az.edu.turing.hotelbookingsystem.exceptions.RoomNotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +28,11 @@ public class RoomService {
 
 
         return findAllRoomsByHotelId.stream().map(room -> roomMapper.toResponse(room)).toList();
+    }
+
+    public RoomResponse getRoomById(Long id){
+        RoomResponse roomResponse=roomMapper.toResponse(roomDAO.findById(id).orElseThrow(()->new RoomNotFoundException("Room not found with the id:"+id)));
+        return roomResponse;
     }
 
 
