@@ -38,10 +38,11 @@ public class RoomService {
         return roomResponse;
     }
 
-    public void deleteRoomById(Long id){
-
+    public void deleteRoomById(Long id) {
+        if (!roomDAO.existsById(id)) {
+            throw new RoomNotFoundException("Room not found with the id: " + id);
+        }
         roomDAO.deleteById(id);
-
     }
 
     public RoomResponse addRoom(RoomRequest roomRequest){
