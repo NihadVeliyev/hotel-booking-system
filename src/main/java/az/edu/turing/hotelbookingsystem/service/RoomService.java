@@ -61,7 +61,7 @@ public class RoomService {
         room.setNumber(roomRequest.getNumber());
         room.setPrice(roomRequest.getPrice());
         room.setHotel(hotel);
-        roomDAO.save(room);
+        Room roomresponse=roomDAO.save(room);
         return roomMapper.toResponse(room);
     }
 
