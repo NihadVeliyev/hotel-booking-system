@@ -1,10 +1,7 @@
 package az.edu.turing.hotelbookingsystem.entity;
 import az.edu.turing.hotelbookingsystem.enums.RoomStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -41,5 +38,6 @@ public class Room {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    }
+}
+
 
