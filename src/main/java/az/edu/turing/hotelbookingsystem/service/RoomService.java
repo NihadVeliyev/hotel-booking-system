@@ -31,8 +31,16 @@ public class RoomService {
     }
 
     public RoomResponse getRoomById(Long id){
-        RoomResponse roomResponse=roomMapper.toResponse(roomDAO.findById(id).orElseThrow(()->new RoomNotFoundException("Room not found with the id:"+id)));
+        RoomResponse roomResponse=roomMapper.toResponse(roomDAO.findById(id)
+                .orElseThrow(()->new RoomNotFoundException("Room not found with the id:"+id)));
         return roomResponse;
+    }
+
+    public void deleteRoomById(Long id){
+        Room room= roomDAO.findById(id)
+                .orElseThrow(()->new RoomNotFoundException("Room not found with the id:"+id));
+        roomDAO.deleteById(id);
+
     }
 
 
