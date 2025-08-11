@@ -2,6 +2,7 @@ package az.edu.turing.hotelbookingsystem.service;
 
 import az.edu.turing.hotelbookingsystem.dao.HotelDAO;
 import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
+import az.edu.turing.hotelbookingsystem.dto.Room.RoomRequest;
 import az.edu.turing.hotelbookingsystem.dto.Room.RoomResponse;
 import az.edu.turing.hotelbookingsystem.entity.Room;
 import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
@@ -42,6 +43,15 @@ public class RoomService {
         roomDAO.deleteById(id);
 
     }
+
+    public RoomResponse addRoom(RoomRequest roomRequest){
+        Room room=roomMapper.toEntity(roomRequest);
+        Room savedRoom=roomDAO.save(room);
+        RoomResponse roomResponse=(roomMapper.toResponse(savedRoom));
+        return roomResponse;
+
+    }
+
 
 
 
