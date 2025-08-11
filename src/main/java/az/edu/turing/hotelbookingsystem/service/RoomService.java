@@ -37,14 +37,15 @@ public class RoomService {
     public RoomResponse getRoomById(Long id){
         RoomResponse roomResponse=roomMapper.toResponse(roomDAO.findById(id)
                 .orElseThrow(()->new RoomNotFoundException("Room not found with the id:"+id)));
+
         return roomResponse;
     }
 
     public void deleteRoomById(Long id) {
-        log.info("Room deleted with the id:{}",id);
         if (!roomDAO.existsById(id)) {
             throw new RoomNotFoundException("Room not found with the id: " + id);
         }
+        log.info("Room deleted with the id:{}",id);
         roomDAO.deleteById(id);
     }
 
@@ -66,6 +67,7 @@ public class RoomService {
         room.setPrice(roomRequest.getPrice());
         room.setHotel(hotel);
         Room updatedRoom=roomDAO.save(room);
+        log.info("Room updated with id: {}",room.getId());
         return roomMapper.toResponse(updatedRoom);
     }
 
