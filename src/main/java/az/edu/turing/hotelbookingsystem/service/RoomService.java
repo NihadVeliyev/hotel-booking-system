@@ -10,6 +10,7 @@ import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.exceptions.RoomNotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RoomService {
     private final RoomDAO roomDAO;
     private final RoomMapper roomMapper;
@@ -39,6 +41,7 @@ public class RoomService {
     }
 
     public void deleteRoomById(Long id) {
+        log.info("Room deleted with the id:{}",id);
         if (!roomDAO.existsById(id)) {
             throw new RoomNotFoundException("Room not found with the id: " + id);
         }
