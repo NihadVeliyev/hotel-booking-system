@@ -4,6 +4,7 @@ import az.edu.turing.hotelbookingsystem.dao.HotelDAO;
 import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
 import az.edu.turing.hotelbookingsystem.dto.Room.RoomRequest;
 import az.edu.turing.hotelbookingsystem.dto.Room.RoomResponse;
+import az.edu.turing.hotelbookingsystem.entity.Hotel;
 import az.edu.turing.hotelbookingsystem.entity.Room;
 import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.exceptions.RoomNotFoundException;
@@ -52,7 +53,17 @@ public class RoomService {
 
     }
 
-
+    public RoomResponse updateRoom(RoomRequest roomRequest,Long id){
+        Room room =roomDAO.findById(id)
+                .orElseThrow(()->new RoomNotFoundException("Room not found with the id:"+id));
+        Hotel hotel=hotelDAO.findById(roomRequest.getHotelId())
+                .orElseThrow(()-> new NotFoundException("Hotel not found with the id:"+roomRequest.getHotelId()));
+        room.setNumber(roomRequest.getNumber());
+        room.setPrice(roomRequest.getPrice());
+        room.setHotel(hotel);
+        roomDAO.save(room);
+        return roomMapper.toResponse(room);
+    }
 
 
 
