@@ -52,6 +52,7 @@ public class RoomService {
         Room room=roomMapper.toEntity(roomRequest);
         Room savedRoom=roomDAO.save(room);
         RoomResponse roomResponse=(roomMapper.toResponse(savedRoom));
+        log.info("Room added with id:{}",savedRoom.getId());
         return roomResponse;
 
     }
