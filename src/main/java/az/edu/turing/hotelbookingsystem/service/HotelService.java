@@ -1,4 +1,28 @@
 package az.edu.turing.hotelbookingsystem.service;
 
+import az.edu.turing.hotelbookingsystem.dao.HotelDAO;
+import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
+import az.edu.turing.hotelbookingsystem.dto.Hotel.HotelResponse;
+import az.edu.turing.hotelbookingsystem.entity.Hotel;
+import az.edu.turing.hotelbookingsystem.mapper.HotelMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
 public class HotelService {
+    private final HotelMapper hotelMapper;
+    private final HotelDAO hotelDAO;
+    private final RoomDAO roomDAO;
+    @Transactional(readOnly = true)
+    public List<HotelResponse> getAllHotels(){
+        List<Hotel> hotels=hotelDAO.findAll();
+        return hotels.stream().map((n)-> hotelMapper.toResponse(n)).toList();
+
+    }
 }
