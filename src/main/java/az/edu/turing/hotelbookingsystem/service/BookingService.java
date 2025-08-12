@@ -1,6 +1,7 @@
 package az.edu.turing.hotelbookingsystem.service;
 import az.edu.turing.hotelbookingsystem.dao.BookingDAO;
 import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
+import az.edu.turing.hotelbookingsystem.dto.Booking.BookingRequest;
 import az.edu.turing.hotelbookingsystem.dto.Booking.BookingResponse;
 import az.edu.turing.hotelbookingsystem.entity.Booking;
 import az.edu.turing.hotelbookingsystem.entity.Room;
@@ -8,6 +9,7 @@ import az.edu.turing.hotelbookingsystem.enums.RoomStatus;
 import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.exceptions.RoomNotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.BookingMapper;
+import jakarta.servlet.http.PushBuilder;
 import jdk.dynalink.NamedOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +56,20 @@ public class BookingService {
         }
         bookingDAO.deleteAllByRoomId(roomId);
         log.info("Deleted all bookings for room id: {}", roomId);
+    }
+    @Transactional
+    public BookingResponse addBooking(BookingRequest request){
+        Room room=roomDAO.findById(request.getRoomId())
+                .orElseThrow(()->new RoomNotFoundException("Room not found with id: "+request.getRoomId()));
+        if(room.getStatus()==RoomStatus.BOOKED){
+            throw new IllegalStateException("Room is already booked");
+        }
+        Booking booking=bookingMapper.toEntity(request);
+        bookingDAO.save(booking);
+        room.setStatus(RoomStatus.BOOKED);
+        roomDAO.save(room);
+        log.info("Booking created for room id: {}", room.getId());
+        return bookingMapper.toResponse(booking);
     }
 
 
