@@ -27,12 +27,9 @@ public class BookingService {
         List<Booking> bookingList=bookingDAO.findAllByRoomId(id);
         return bookingList.stream().map(n->bookingMapper.toResponse(n)).toList();
     }
-
+    @Transactional(readOnly = true)
     public List<BookingResponse> getAllBookings() {
-        return bookingDAO.findAll().stream()
-                .map(bookingMapper::toResponse)
-                .collect(Collectors.toList());
+        return getAllBookings(null);
     }
-
 
 }
