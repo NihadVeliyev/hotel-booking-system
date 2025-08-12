@@ -9,15 +9,11 @@ import az.edu.turing.hotelbookingsystem.enums.RoomStatus;
 import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.exceptions.RoomNotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.BookingMapper;
-import jakarta.servlet.http.PushBuilder;
-import jdk.dynalink.NamedOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -71,6 +67,4 @@ public class BookingService {
         log.info("Booking created for room id: {}", room.getId());
         return bookingMapper.toResponse(booking);
     }
-
-
 }
