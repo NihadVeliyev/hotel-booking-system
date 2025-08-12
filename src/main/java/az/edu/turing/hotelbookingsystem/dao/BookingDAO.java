@@ -7,4 +7,5 @@ import java.util.List;
 @Repository
 public interface BookingDAO extends JpaRepository <Booking,Long> {
     List<Booking> findAllByRoomId(Long roomId);
+    void deleteBookingByRoomId(Long roomId);
 }
