@@ -4,9 +4,11 @@ import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
 import az.edu.turing.hotelbookingsystem.dto.Booking.BookingResponse;
 import az.edu.turing.hotelbookingsystem.entity.Booking;
 import az.edu.turing.hotelbookingsystem.entity.Room;
+import az.edu.turing.hotelbookingsystem.enums.RoomStatus;
 import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.exceptions.RoomNotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.BookingMapper;
+import jdk.dynalink.NamedOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,10 +36,13 @@ public class BookingService {
     }
     @Transactional
     public void deleteBookingById(Long id){
-        if(!bookingDAO.existsById(id)){
-            throw new NotFoundException("Booking not found with id: "+id);
-        }
+
+        Booking booking=bookingDAO.findById(id).orElseThrow(()->new NotFoundException("Booking not found with id: "+id));
+        Room room = roomDAO.findById(booking.getRoom().getId())
+                .orElseThrow(() -> new NotFoundException("Room with id: " + booking.getRoom().getId() + " not found"));
         bookingDAO.deleteById(id);
+        room.setStatus(RoomStatus.AVAILABLE);
+        room.setBooking(null);
         log.info("Deleted booking with id: {}",id);
 
     }
@@ -49,5 +54,6 @@ public class BookingService {
         bookingDAO.deleteAllByRoomId(roomId);
         log.info("Deleted all bookings for room id: {}", roomId);
     }
+
 
 }
