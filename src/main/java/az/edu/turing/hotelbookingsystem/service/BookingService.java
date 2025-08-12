@@ -4,6 +4,7 @@ import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
 import az.edu.turing.hotelbookingsystem.dto.Booking.BookingResponse;
 import az.edu.turing.hotelbookingsystem.entity.Booking;
 import az.edu.turing.hotelbookingsystem.entity.Room;
+import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.exceptions.RoomNotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.BookingMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class BookingService {
     private  final BookingMapper bookingMapper;
     private final RoomDAO roomDAO;
     @Transactional(readOnly = true)
-    public List<BookingResponse> getAllBookings(Long id){
+    public List<BookingResponse> getAllBookingsByRoomId(Long id){
         Room room=roomDAO.findById(id)
                 .orElseThrow(()->new RoomNotFoundException("Room not found with id: "+id));
         List<Booking> bookingList=bookingDAO.findAllByRoomId(id);
@@ -29,7 +30,16 @@ public class BookingService {
     }
     @Transactional(readOnly = true)
     public List<BookingResponse> getAllBookings() {
-        return getAllBookings(null);
+        return getAllBookingsByRoomId(null);
+    }
+    @Transactional
+    public void deleteBookingById(Long id){
+        if(!bookingDAO.existsById(id)){
+            throw new NotFoundException("Booking not found with id: "+id);
+        }
+        bookingDAO.deleteById(id);
+        log.info("Deleted booking with id: {}",id);
+
     }
 
 }
