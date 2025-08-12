@@ -48,6 +48,15 @@ public class HotelService {
     public HotelResponse createHotel(HotelRequest request){
         return hotelMapper.toResponse(hotelDAO.save(hotelMapper.toEntity(request)));
     }
+    @Transactional
+    public HotelResponse updateHotelById(HotelRequest request,Long id){
+        Hotel hotel=hotelDAO.findById(id)
+                .orElseThrow(()->new NotFoundException("Hotel not found with id: "+id));
+        hotel.setName(request.getName());
+        hotel.setLocation(request.getLocation());
+        Hotel updatedHotel=hotelDAO.save(hotel);
+        return hotelMapper.toResponse(updatedHotel);
+    }
 
 
 }

@@ -2,8 +2,11 @@ package az.edu.turing.hotelbookingsystem.dto.Hotel;
 
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-
+@Data
+@RequiredArgsConstructor
 public class HotelRequest {
 
 
