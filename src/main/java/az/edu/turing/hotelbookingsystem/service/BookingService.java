@@ -43,6 +43,7 @@ public class BookingService {
         bookingDAO.deleteById(id);
         room.setStatus(RoomStatus.AVAILABLE);
         room.setBooking(null);
+        roomDAO.save(room);
         log.info("Deleted booking with id: {}",id);
 
     }
