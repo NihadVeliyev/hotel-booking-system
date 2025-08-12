@@ -2,7 +2,9 @@ package az.edu.turing.hotelbookingsystem.service;
 
 import az.edu.turing.hotelbookingsystem.dao.HotelDAO;
 import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
+import az.edu.turing.hotelbookingsystem.dto.Hotel.HotelRequest;
 import az.edu.turing.hotelbookingsystem.dto.Hotel.HotelResponse;
+import az.edu.turing.hotelbookingsystem.dto.Room.RoomResponse;
 import az.edu.turing.hotelbookingsystem.entity.Hotel;
 import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.HotelMapper;
@@ -33,4 +35,19 @@ public class HotelService {
                 .orElseThrow(()->new NotFoundException("Hotel not found with id:"+id));
         return hotelMapper.toResponse(hotel);
     }
+    @Transactional
+    public void deleteHotelById(Long id){
+        Hotel hotel= hotelDAO.findById(id)
+                .orElseThrow(()->new NotFoundException("Hotel not found with id:"+id));
+
+        hotelDAO.delete(hotel);
+        log.info("Deleted hotel with id: "+id);
+    }
+
+    @Transactional
+    public HotelResponse createHotel(HotelRequest request){
+        return hotelMapper.toResponse(hotelDAO.save(hotelMapper.toEntity(request)));
+    }
+
+
 }
