@@ -4,6 +4,7 @@ import az.edu.turing.hotelbookingsystem.dao.HotelDAO;
 import az.edu.turing.hotelbookingsystem.dao.RoomDAO;
 import az.edu.turing.hotelbookingsystem.dto.Hotel.HotelResponse;
 import az.edu.turing.hotelbookingsystem.entity.Hotel;
+import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.HotelMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,5 +25,12 @@ public class HotelService {
         List<Hotel> hotels=hotelDAO.findAll();
         return hotels.stream().map((n)-> hotelMapper.toResponse(n)).toList();
 
+    }
+    @Transactional(readOnly = true)
+    public HotelResponse getHotelById(Long id){
+        log.info("Fetching hotel with id: {}", id);
+        Hotel hotel=hotelDAO.findById(id)
+                .orElseThrow(()->new NotFoundException("Hotel not found with id:"+id));
+        return hotelMapper.toResponse(hotel);
     }
 }
