@@ -24,37 +24,56 @@ public class HotelService {
     private final RoomDAO roomDAO;
     @Transactional(readOnly = true)
     public List<HotelResponse> getAllHotels(){
-        List<Hotel> hotels=hotelDAO.findAll();
-        return hotels.stream().map((n)-> hotelMapper.toResponse(n)).toList();
-
+        log.info("Fetching all hotels");
+        List<Hotel> hotels = hotelDAO.findAll();
+        return hotels.stream().map(hotelMapper::toResponse).toList();
     }
     @Transactional(readOnly = true)
     public HotelResponse getHotelById(Long id){
+        if (id == null) {
+            throw new IllegalArgumentException("Hotel ID cannot be null");
+        }
         log.info("Fetching hotel with id: {}", id);
-        Hotel hotel=hotelDAO.findById(id)
-                .orElseThrow(()->new NotFoundException("Hotel not found with id:"+id));
+        Hotel hotel = hotelDAO.findById(id)
+                .orElseThrow(() -> new NotFoundException("Hotel not found with id: " + id));
         return hotelMapper.toResponse(hotel);
     }
     @Transactional
     public void deleteHotelById(Long id){
-        Hotel hotel= hotelDAO.findById(id)
-                .orElseThrow(()->new NotFoundException("Hotel not found with id:"+id));
+        if (id == null) {
+            throw new IllegalArgumentException("Hotel ID cannot be null");
+        }
+        Hotel hotel = hotelDAO.findById(id)
+                .orElseThrow(() -> new NotFoundException("Hotel not found with id: " + id));
 
         hotelDAO.delete(hotel);
-        log.info("Deleted hotel with id: "+id);
+        log.info("Deleted hotel with id: {}", id);
     }
 
     @Transactional
     public HotelResponse createHotel(HotelRequest request){
-        return hotelMapper.toResponse(hotelDAO.save(hotelMapper.toEntity(request)));
+        if (request == null) {
+            throw new IllegalArgumentException("Hotel request cannot be null");
+        }
+        Hotel hotel = hotelMapper.toEntity(request);
+        Hotel savedHotel = hotelDAO.save(hotel);
+        log.info("Created hotel with id: {}", savedHotel.getId());
+        return hotelMapper.toResponse(savedHotel);
     }
     @Transactional
-    public HotelResponse updateHotelById(HotelRequest request,Long id){
-        Hotel hotel=hotelDAO.findById(id)
-                .orElseThrow(()->new NotFoundException("Hotel not found with id: "+id));
+    public HotelResponse updateHotelById(HotelRequest request, Long id){
+        if (request == null) {
+            throw new IllegalArgumentException("Hotel request cannot be null");
+        }
+        if (id == null) {
+            throw new IllegalArgumentException("Hotel ID cannot be null");
+        }
+        Hotel hotel = hotelDAO.findById(id)
+                .orElseThrow(() -> new NotFoundException("Hotel not found with id: " + id));
         hotel.setName(request.getName());
         hotel.setLocation(request.getLocation());
-        Hotel updatedHotel=hotelDAO.save(hotel);
+        Hotel updatedHotel = hotelDAO.save(hotel);
+        log.info("Updated hotel with id: {}", id);
         return hotelMapper.toResponse(updatedHotel);
     }
 

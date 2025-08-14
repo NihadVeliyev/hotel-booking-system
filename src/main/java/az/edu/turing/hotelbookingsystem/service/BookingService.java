@@ -5,6 +5,7 @@ import az.edu.turing.hotelbookingsystem.dto.Booking.BookingRequest;
 import az.edu.turing.hotelbookingsystem.dto.Booking.BookingResponse;
 import az.edu.turing.hotelbookingsystem.entity.Booking;
 import az.edu.turing.hotelbookingsystem.entity.Room;
+import az.edu.turing.hotelbookingsystem.enums.BookingStatus;
 import az.edu.turing.hotelbookingsystem.enums.RoomStatus;
 import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.exceptions.RoomNotFoundException;
@@ -23,48 +24,69 @@ public class BookingService {
     private final RoomDAO roomDAO;
     @Transactional(readOnly = true)
     public List<BookingResponse> getAllBookingsByRoomId(Long id){
-        Room room=roomDAO.findById(id)
-                .orElseThrow(()->new RoomNotFoundException("Room not found with id: "+id));
-        List<Booking> bookingList=bookingDAO.findAllByRoomId(id);
-        return bookingList.stream().map(n->bookingMapper.toResponse(n)).toList();
+        if (id == null) {
+            throw new IllegalArgumentException("Room ID cannot be null");
+        }
+        Room room = roomDAO.findById(id)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + id));
+        List<Booking> bookingList = bookingDAO.findAllByRoomId(id);
+        log.info("Found {} bookings for room id: {}", bookingList.size(), id);
+        return bookingList.stream().map(bookingMapper::toResponse).toList();
     }
     @Transactional(readOnly = true)
     public List<BookingResponse> getAllBookings() {
-        return getAllBookingsByRoomId(null);
+        log.info("Fetching all bookings");
+        List<Booking> bookings = bookingDAO.findAll();
+        return bookings.stream().map(bookingMapper::toResponse).toList();
     }
     @Transactional
     public void deleteBookingById(Long id){
-
-        Booking booking=bookingDAO.findById(id).orElseThrow(()->new NotFoundException("Booking not found with id: "+id));
-        Room room = roomDAO.findById(booking.getRoom().getId())
-                .orElseThrow(() -> new NotFoundException("Room with id: " + booking.getRoom().getId() + " not found"));
+        Booking booking = bookingDAO.findById(id)
+                .orElseThrow(() -> new NotFoundException("Booking not found with id: " + id));
+        
+        if (booking.getRoom() != null) {
+            Room room = booking.getRoom();
+            room.setStatus(RoomStatus.AVAILABLE);
+            room.setBooking(null);
+            roomDAO.save(room);
+        }
+        
         bookingDAO.deleteById(id);
-        room.setStatus(RoomStatus.AVAILABLE);
-        room.setBooking(null);
-        roomDAO.save(room);
-        log.info("Deleted booking with id: {}",id);
-
+        log.info("Deleted booking with id: {}", id);
     }
     @Transactional
     public void deleteBookingsByRoomId(Long roomId) {
-        if (!roomDAO.existsById(roomId)) {
-            throw new RoomNotFoundException("Room not found with id: " + roomId);
-        }
+        Room room = roomDAO.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + roomId));
+        
         bookingDAO.deleteAllByRoomId(roomId);
+        
+        room.setStatus(RoomStatus.AVAILABLE);
+        room.setBooking(null);
+        roomDAO.save(room);
+        
         log.info("Deleted all bookings for room id: {}", roomId);
     }
     @Transactional
     public BookingResponse addBooking(BookingRequest request){
-        Room room=roomDAO.findById(request.getRoomId())
-                .orElseThrow(()->new RoomNotFoundException("Room not found with id: "+request.getRoomId()));
-        if(room.getStatus()==RoomStatus.BOOKED){
+        Room room = roomDAO.findById(request.getRoomId())
+                .orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + request.getRoomId()));
+        
+        if (room.getStatus() == RoomStatus.BOOKED) {
             throw new IllegalStateException("Room is already booked");
         }
-        Booking booking=bookingMapper.toEntity(request);
-        bookingDAO.save(booking);
+        
+        Booking booking = bookingMapper.toEntity(request);
+        booking.setRoom(room);
+        booking.setBookingStatus(BookingStatus.ACTIVE);
+        
+        Booking savedBooking = bookingDAO.save(booking);
+        
         room.setStatus(RoomStatus.BOOKED);
+        room.setBooking(savedBooking);
         roomDAO.save(room);
-        log.info("Booking created for room id: {}", room.getId());
-        return bookingMapper.toResponse(booking);
+        
+        log.info("Booking created for room id: {} with booking id: {}", room.getId(), savedBooking.getId());
+        return bookingMapper.toResponse(savedBooking);
     }
 }

@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
 
         ApiError apiError=new ApiError(
                 400,
-                "Validition failed",
+                "Validation failed",
                 request.getRequestURI(),
                 LocalDateTime.now(),
                 fieldErrorResponseMap
@@ -95,6 +95,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiError);
 
 
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request){
+        log.warn("Invalid argument: {}", ex.getMessage());
+        ApiError apiError = new ApiError(
+                400,
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.badRequest().body(apiError);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiError> handleIllegalState(IllegalStateException ex, HttpServletRequest request){
+        log.warn("Invalid state: {}", ex.getMessage());
+        ApiError apiError = new ApiError(
+                409,
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(409).body(apiError);
     }
 
 

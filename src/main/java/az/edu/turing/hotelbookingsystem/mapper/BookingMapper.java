@@ -13,6 +13,8 @@ public interface BookingMapper {
     @Mapping(target = "room", ignore = true)
     @Mapping(target = "bookingStatus", ignore = true)
     Booking toEntity(BookingRequest bookingRequest);
+    
+    @Mapping(target = "room.hotelId", source = "room.hotel.id")
     BookingResponse toResponse(Booking booking);
 }
 

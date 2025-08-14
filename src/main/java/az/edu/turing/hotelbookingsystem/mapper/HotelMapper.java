@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface HotelMapper {
 
 
-    @Mapping(target = "booking", ignore = true)
+    @Mapping(target = "rooms", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "id", ignore = true)
     Hotel toEntity(HotelRequest request);
