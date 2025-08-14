@@ -31,5 +31,9 @@ public class RoomController {
     public ResponseEntity<List<RoomResponse>> getAllRoomsByHotelId(@RequestParam Long hotelId){
         return ResponseEntity.status(HttpStatus.OK).body(roomService.getAllRoomsByHotelId(hotelId));
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomResponse> getRoomById(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(roomService.getRoomById(id));
+    }
 
 }
