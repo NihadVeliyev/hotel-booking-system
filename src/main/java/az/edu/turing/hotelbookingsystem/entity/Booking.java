@@ -42,7 +42,7 @@ public   class Booking {
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
-    private BookingStatus bookinglStatus;
+    private BookingStatus bookingStatus;
 
 
 }

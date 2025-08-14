@@ -11,9 +11,11 @@ public interface RoomMapper {
     @Mapping(target = "status", constant = "AVAILABLE")
     @Mapping(target = "booking", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "hotelId", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "hotel", ignore = true)
     Room toEntity(RoomRequest request);
-    @Mapping(target = "hotel", source = "hotelId")
+    
+    @Mapping(target = "hotelId", source = "hotel.id")
     RoomResponse toResponse(Room room);
 
 

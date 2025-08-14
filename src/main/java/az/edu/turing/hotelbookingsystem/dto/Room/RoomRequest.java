@@ -1,7 +1,8 @@
 package az.edu.turing.hotelbookingsystem.dto.Room;
 
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,13 +10,16 @@ import lombok.Data;
 @AllArgsConstructor
 public class RoomRequest {
 
-    @NotBlank
-    private  Integer number;
+    @NotNull(message = "Room number is required")
+    @Positive(message = "Room number must be positive")
+    private Integer number;
 
-    @NotBlank
+    @NotNull(message = "Room price is required")
+    @Positive(message = "Room price must be positive")
     private Integer price;
 
-    @NotBlank
+    @NotNull(message = "Hotel ID is required")
+    @Positive(message = "Hotel ID must be positive")
     private Long hotelId;
 
 
