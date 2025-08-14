@@ -21,6 +21,6 @@ public class BookingResponse {
 
     private LocalDateTime endDate;
 
-    private BookingStatus bookinglStatus;
+    private BookingStatus bookingStatus;
 
 }
