@@ -46,6 +46,12 @@ public class BookingService {
         log.info("Deleted booking with id: {}",id);
 
     }
+    @Transactional(readOnly = true)
+    public BookingResponse getBookingById(Long id){
+        Booking booking=bookingDAO.findById(id)
+                .orElseThrow(()->new NotFoundException("Booking not found with id:"+id));
+        return bookingMapper.toResponse(booking);
+    }
     @Transactional
     public void deleteBookingsByRoomId(Long roomId) {
         Room room = roomDAO.findById(roomId)
