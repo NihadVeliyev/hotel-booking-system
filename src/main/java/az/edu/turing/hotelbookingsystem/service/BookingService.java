@@ -47,10 +47,15 @@ public class BookingService {
     }
     @Transactional
     public void deleteBookingsByRoomId(Long roomId) {
-        if (!roomDAO.existsById(roomId)) {
-            throw new RoomNotFoundException("Room not found with id: " + roomId);
-        }
+        Room room = roomDAO.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + roomId));
+
         bookingDAO.deleteAllByRoomId(roomId);
+
+        room.setStatus(RoomStatus.AVAILABLE);
+        room.setBooking(null);
+        roomDAO.save(room);
+
         log.info("Deleted all bookings for room id: {}", roomId);
     }
     @Transactional
