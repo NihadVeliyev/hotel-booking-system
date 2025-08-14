@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/rooms")
 @RequiredArgsConstructor
@@ -24,6 +26,10 @@ public class RoomController {
     public  ResponseEntity<Void> deleteRoom(@PathVariable Long id){
         roomService.deleteRoomById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @GetMapping
+    public ResponseEntity<List<RoomResponse>> getAllRoomsByHotelId(@RequestParam Long hotelId){
+        return ResponseEntity.status(HttpStatus.OK).body(roomService.getAllRoomsByHotelId(hotelId));
     }
 
 }
