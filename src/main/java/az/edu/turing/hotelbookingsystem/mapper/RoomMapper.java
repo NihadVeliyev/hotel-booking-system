@@ -16,7 +16,7 @@ public interface RoomMapper {
     @Mapping(target = "hotel", ignore = true)
     @Mapping(target = "id", ignore = true)
     Room toEntity(RoomRequest request);
-    @Mapping(target = "hotel", ignore = true)
+    @Mapping(target = "hotelId", ignore = true)
     RoomResponse toResponse(Room room);
 }
 
