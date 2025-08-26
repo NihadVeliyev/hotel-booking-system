@@ -24,10 +24,6 @@ public class UserService {
     private final UserMapper userMapper;
     private final OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter;
     private final MapReactiveUserDetailsService reactiveUserDetailsService;
-    //TODO     listallusers
-    // apply logs in all methods
-    // apply transactional in all methods
-
     @Transactional
     public UserResponse createUser(UserRequest userRequest){
         User user = userMapper.toEntity(userRequest);
