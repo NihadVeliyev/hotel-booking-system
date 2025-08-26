@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserDAO userDAO;
     private final UserMapper userMapper;
-    //TODO createUser deleteUser findById findByUsername listallusers
+    //TODO  deleteUser  findByUsername listallusers
     // apply logs in all methods
     // apply transactional in all methods
 
@@ -33,6 +33,14 @@ public class UserService {
         log.info("User fetched with the id:{}",id);
         return userMapper.toResponse(userDAO.findById(id)
                 .orElseThrow(()->new NotFoundException("User not found with the id "+id)));
+    }
+    @Transactional
+    public void deleteUserById(Long id){
+        if(!userDAO.existsById(id)){
+            throw new NotFoundException("User not found with the id"+id);
+        }
+        userDAO.deleteById(id);
+        log.info("User deleted with the id:{}",id);
     }
 
 }
