@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.control.MappingControl;
 import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +23,11 @@ import java.util.List;
 public class UserService {
     private final UserDAO userDAO;
     private final UserMapper userMapper;
-    private final OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter;
-    private final MapReactiveUserDetailsService reactiveUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
     @Transactional
     public UserResponse createUser(UserRequest userRequest){
         User user = userMapper.toEntity(userRequest);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userDAO.save(user);
         log.info("User created with the id: {}", savedUser.getId());
         return userMapper.toResponse(savedUser);
