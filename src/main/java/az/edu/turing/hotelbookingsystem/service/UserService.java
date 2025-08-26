@@ -9,8 +9,12 @@ import az.edu.turing.hotelbookingsystem.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.control.MappingControl;
+import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserDAO userDAO;
     private final UserMapper userMapper;
-    //TODO    findByUsername listallusers
+    private final OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter;
+    private final MapReactiveUserDetailsService reactiveUserDetailsService;
+    //TODO     listallusers
     // apply logs in all methods
     // apply transactional in all methods
 
@@ -50,6 +56,11 @@ public class UserService {
         }
         log.info("User fetched with the username:{}",username);
         return userMapper.toResponse(userDAO.findUserByUsername(username));
+    }
+    @Transactional(readOnly = true)
+    public List<UserResponse> listAllUsers(){
+        List<User> allUsers=userDAO.findAll();
+        return allUsers.stream().map(n->userMapper.toResponse(n)).toList();
     }
 
 
