@@ -4,6 +4,7 @@ import az.edu.turing.hotelbookingsystem.dao.UserDAO;
 import az.edu.turing.hotelbookingsystem.dto.User.UserRequest;
 import az.edu.turing.hotelbookingsystem.dto.User.UserResponse;
 import az.edu.turing.hotelbookingsystem.entity.User;
+import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,12 @@ public class UserService {
         User savedUser = userDAO.save(user);
         log.info("User created with the id: {}", savedUser.getId());
         return userMapper.toResponse(savedUser);
+    }
+    @Transactional(readOnly = true)
+    public UserResponse getUserById(Long id){
+        log.info("User fetched with the id:{}",id);
+        return userMapper.toResponse(userDAO.findById(id)
+                .orElseThrow(()->new NotFoundException("User not found with the id "+id)));
     }
 
 }
