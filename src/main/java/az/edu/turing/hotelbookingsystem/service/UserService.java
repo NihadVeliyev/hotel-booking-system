@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserDAO userDAO;
     private final UserMapper userMapper;
-    //TODO  deleteUser  findByUsername listallusers
+    //TODO    findByUsername listallusers
     // apply logs in all methods
     // apply transactional in all methods
 
@@ -42,5 +42,6 @@ public class UserService {
         userDAO.deleteById(id);
         log.info("User deleted with the id:{}",id);
     }
+
 
 }
