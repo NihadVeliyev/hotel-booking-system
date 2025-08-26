@@ -8,6 +8,7 @@ import az.edu.turing.hotelbookingsystem.exceptions.NotFoundException;
 import az.edu.turing.hotelbookingsystem.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.control.MappingControl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,14 @@ public class UserService {
         }
         userDAO.deleteById(id);
         log.info("User deleted with the id:{}",id);
+    }
+    @Transactional(readOnly = true)
+    public UserResponse getUserByUsername(String username){
+        if(!userDAO.existsUserByUsername(username)){
+            throw new NotFoundException("User not found with the username: "+username);
+        }
+        log.info("User fetched with the username:{}",username);
+        return userMapper.toResponse(userDAO.findUserByUsername(username));
     }
 
 
